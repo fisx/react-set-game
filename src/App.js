@@ -410,15 +410,3 @@ class App extends Component {
 }
 
 export { App, Card, readStopwatch };
-
-
-// next steps:
-//
-// separate repo
-// deploy in github pages
-//
-// sprint mode: set a time span, and see how many sets you can find in that time span.  in this mode, mix grabbed sets back into deck.j
-// do not move cards around
-// document a little, test a little more
-//
-// multi-user with websockets backend
