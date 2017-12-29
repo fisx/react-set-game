@@ -300,7 +300,8 @@ const handleKeyDown = (getState, setState) => e => {
     case  74: ix =  4; break;  // j
     case  75: ix =  5; break;  // k
     case  76: ix =  6; break;  // l
-    case  59: ix =  7; break;  // ;
+    case  59: ix =  7; break;  // ;  on firefox
+    case 186: ix =  7; break;  // ;  on chromium
 
     case  78: ix =  8; break;  // n
     case  77: ix =  9; break;  // m
