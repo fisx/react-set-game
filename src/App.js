@@ -230,13 +230,15 @@ const readStopwatch = (ticks) => {
 };
 
 
-const initState = () => {
+const initState = (juniorMode) => {
+  let wantThisCard = c => juniorMode ? allCards[c].filling === 'Solid' : true;
   let state = {
-    deck: rndPermute(Array.apply(0, Array(allCards.length)).map((x, y) => y)),
+    deck: rndPermute(Array.apply(0, Array(allCards.length)).map((x, y) => y).filter(wantThisCard)),
     board: [],
     selected: [],
     // solutions: ...  (to be initialised by replenishBoard below)
-    stopwatch: []
+    stopwatch: [],
+    juniorMode: juniorMode
   };
 
   tickStopwatch(state.stopwatch);
@@ -286,7 +288,7 @@ const handleKeyDown = (getState, setState) => e => {
   state = {...state};
 
   if (e.keyCode === 82) { // r
-    setState(initState());
+    setState(initState(state.juniorMode));
     return;
   }
 
@@ -375,7 +377,7 @@ const Stopwatch = (props) => {
 class App extends Component {
   constructor() {
     super();
-    this.state = initState();
+    this.state = initState(false);
   };
 
   componentDidMount() {
@@ -391,8 +393,11 @@ class App extends Component {
             <p>{ this.state.solutions } solutions</p>
           </div>
           <div className="app-column">
-            <button onClick={() => { this.setState(initState()); }}>
+            <button onClick={() => { this.setState(initState(this.state.juniorMode)); }}>
               play again
+            </button>
+            <button onClick={() => { this.setState(initState(!this.state.juniorMode)); }}>
+              { this.state.juniorMode ? 'switch to expert mode' : 'switch to junior mode' }
             </button>
             <div className="error">
               { this.state.errmsg }
