@@ -156,7 +156,7 @@ const checkTriple = (a, b, c) => {
     maybepush(allCards[c][k]);
 
     if (vals.length === 2) {
-      return { result: 'error', msg: [k, vals].toString() };
+      return { result: 'error', msg: 'not a set: ' + k.toString() };
     }
   }
 
@@ -365,8 +365,8 @@ const Stopwatch = (props) => {
 
   return (
     <div>
-      <div>{ total } secs total</div>
-      <div>{ avg } secs / catch</div>
+      <div>total: { total }</div>
+      <div>per set: { avg }</div>
       <div>best: { best }</div>
       <div>worst: { worst }</div>
       <div>history: { history }</div>
@@ -398,7 +398,7 @@ class App extends Component {
               play again
             </button>
             <button onClick={() => { this.setState(initState(!this.state.juniorMode, this.state.showStopwatch)); }}>
-              { this.state.juniorMode ? 'switch to expert mode' : 'switch to junior mode' }
+              { this.state.juniorMode ? 'switch to nerd mode' : 'switch to junior mode' }
             </button>
             <button onClick={() => { this.setState({ showStopwatch: !this.state.showStopwatch}); }}>
               { this.state.showStopwatch ? 'hide stop watch' : 'show stop watch' }
