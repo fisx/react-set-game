@@ -230,7 +230,7 @@ const readStopwatch = (ticks) => {
 };
 
 
-const initState = (juniorMode) => {
+const initState = (juniorMode, showStopwatch) => {
   let wantThisCard = c => juniorMode ? allCards[c].filling === 'Solid' : true;
   let state = {
     deck: rndPermute(Array.apply(0, Array(allCards.length)).map((x, y) => y).filter(wantThisCard)),
@@ -238,7 +238,8 @@ const initState = (juniorMode) => {
     selected: [],
     // solutions: ...  (to be initialised by replenishBoard below)
     stopwatch: [],
-    juniorMode: juniorMode
+    juniorMode: juniorMode,
+    showStopwatch: showStopwatch
   };
 
   tickStopwatch(state.stopwatch);
@@ -288,7 +289,7 @@ const handleKeyDown = (getState, setState) => e => {
   state = {...state};
 
   if (e.keyCode === 82) { // r
-    setState(initState(state.juniorMode));
+    setState(initState(state.juniorMode, state.showStopwatch));
     return;
   }
 
@@ -377,7 +378,7 @@ const Stopwatch = (props) => {
 class App extends Component {
   constructor() {
     super();
-    this.state = initState(false);
+    this.state = initState(false, true);
   };
 
   componentDidMount() {
@@ -393,11 +394,14 @@ class App extends Component {
             <p>{ this.state.solutions } solutions</p>
           </div>
           <div className="app-column">
-            <button onClick={() => { this.setState(initState(this.state.juniorMode)); }}>
+            <button onClick={() => { this.setState(initState(this.state.juniorMode, this.state.showStopwatch)); }}>
               play again
             </button>
-            <button onClick={() => { this.setState(initState(!this.state.juniorMode)); }}>
+            <button onClick={() => { this.setState(initState(!this.state.juniorMode, this.state.showStopwatch)); }}>
               { this.state.juniorMode ? 'switch to expert mode' : 'switch to junior mode' }
+            </button>
+            <button onClick={() => { this.setState({ showStopwatch: !this.state.showStopwatch}); }}>
+              { this.state.showStopwatch ? 'hide stop watch' : 'show stop watch' }
             </button>
             <div className="error">
               { this.state.errmsg }
@@ -405,7 +409,7 @@ class App extends Component {
             </div>
           </div>
           <div className="app-column">
-            <Stopwatch ticks={this.state.stopwatch} />
+            { this.state.showStopwatch ? <Stopwatch ticks={this.state.stopwatch} /> : '' }
           </div>
         </div>
         <Board state={{...this.state}} setState={(s) => this.setState(s)} />
