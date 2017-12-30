@@ -32,6 +32,10 @@ a {
   background-color: #0f0faf;
 }
 
+.highlight {
+  background-color: yellow;
+}
+
 .error {
   padding: 15px;
 }

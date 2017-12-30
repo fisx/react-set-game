@@ -113,7 +113,9 @@ class Card extends Component {
   };
 
   render() {
-    const cls = "board-card " + (this.props.selected ? "selected" : "");
+    const cls = "board-card "
+              + (this.props.selected ? "selected" : "")
+              + (this.props.isInShowedSolution ? "highlight" : "");
     return (
       <div className={cls} onClick={() => this.props.onClick(this.props.card)}>
         <img height="180"
@@ -171,7 +173,7 @@ const solve = (cards) => {
     for (let b = a + 1; b < cards.length; b++) {
       for (let c = b + 1; c < cards.length; c++) {
         if (checkTriple(cards[a], cards[b], cards[c]).result === 'ok')
-          solutions.push([allCards[cards[a]], allCards[cards[b]], allCards[cards[c]]]);
+          solutions.push([a, b, c]);
       }
     }
   }
@@ -182,11 +184,11 @@ const solve = (cards) => {
 
 const replenishBoard = (state_) => {
   let state = {...state_};
-  state.solutions = solve(state.board).length;
+  state.solutions = solve(state.board);
 
-  while ((state.board.length < 12 || state.solutions === 0) && state.deck.length > 0) {
+  while ((state.board.length < 12 || state.solutions.length === 0) && state.deck.length > 0) {
     state.board.push(state.deck.pop());
-    state.solutions = solve(state.board).length;
+    state.solutions = solve(state.board);
   }
 
   return state;
@@ -236,7 +238,8 @@ const initState = (juniorMode, showStopwatch) => {
     deck: rndPermute(Array.apply(0, Array(allCards.length)).map((x, y) => y).filter(wantThisCard)),
     board: [],
     selected: [],
-    // solutions: ...  (to be initialised by replenishBoard below)
+    solutions: [],
+    showSolution: -1,
     stopwatch: [],
     juniorMode: juniorMode,
     showStopwatch: showStopwatch
@@ -254,7 +257,7 @@ const toggleSelect = (state_, crd0) => {
   state.errmsg = '';
 
   if (state.board.findIndex(crd1 => crd1 === crd0) === -1  // no such card
-      || state.solutions === 0)                            // game over
+      || state.solutions.length === 0)                     // game over
     return;
 
   let kill = sel.findIndex(crd1 => crd1 === crd0);
@@ -290,6 +293,11 @@ const handleKeyDown = (getState, setState) => e => {
 
   if (e.keyCode === 82) { // r
     setState(initState(state.juniorMode, state.showStopwatch));
+    return;
+  }
+
+  if (e.keyCode === 67) { // c
+    setState({ showSolution: (state.showSolution >= state.solutions.length - 1) ? (-1) : (state.showSolution + 1) });
     return;
   }
 
@@ -334,9 +342,14 @@ const Board = ({state, setState}) => {
       setState(toggleSelect(state, crd0));
     };
 
+    let highlight = state.showSolution >= 0
+                 && state.solutions.length > state.showSolution
+                 && state.solutions[state.showSolution].findIndex(ix0 => ix0 === ix) !== -1;
+
     return <Card svgPath="svg"
                  card={crd}
                  selected={issel(crd)}
+                 isInShowedSolution={highlight}
                  onClick={onclck}
     />
   };
@@ -391,7 +404,7 @@ class App extends Component {
         <div className="app-row">
           <div className="app-column">
             <p>{ this.state.deck.length } cards left</p>
-            <p>{ this.state.solutions } solutions</p>
+            <p>{ this.state.solutions.length } solutions</p>
           </div>
           <div className="app-column">
             <button onClick={() => { this.setState(initState(this.state.juniorMode, this.state.showStopwatch)); }}>
@@ -405,7 +418,7 @@ class App extends Component {
             </button>
             <div className="error">
               { this.state.errmsg }
-              { this.state.solutions === 0 ? 'Game Over!' : '' }
+              { this.state.solutions.length === 0 ? 'Game Over!' : '' }
             </div>
           </div>
           <div className="app-column">
