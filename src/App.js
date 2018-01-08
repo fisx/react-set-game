@@ -145,22 +145,19 @@ const rndPermute = (v_) => {
 
 
 const checkTriple = (a, b, c) => {
-  for (let k in allCards[a]) {
-    let vals = [];
+  let alleq = k => (
+    allCards[a][k] === allCards[b][k] &&
+    allCards[b][k] === allCards[c][k]
+  );
+  let alldiff = k => (
+    allCards[a][k] !== allCards[b][k] &&
+    allCards[a][k] !== allCards[c][k] &&
+    allCards[b][k] !== allCards[c][k]
+  );
 
-    let maybepush = (val) => {
-      if (vals.findIndex(val0 => val0 === val) === -1)
-        vals.push(val);
-    };
-
-    maybepush(allCards[a][k]);
-    maybepush(allCards[b][k]);
-    maybepush(allCards[c][k]);
-
-    if (vals.length === 2) {
+  for (let k in allCards[a])
+    if (!(alleq(k) || alldiff(k)))
       return { result: 'error', msg: 'not a set: ' + k.toString() };
-    }
-  }
 
   return { result: 'ok' };
 };
