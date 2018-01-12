@@ -136,7 +136,8 @@ const initState = (juniorMode, showStopwatch) => {
     showSolution: -1,
     stopwatch: [],
     juniorMode: juniorMode,
-    showStopwatch: showStopwatch
+    showStopwatch: showStopwatch,
+    errmsg: 'select 3 cards'
   };
 
   tickStopwatch(state.stopwatch);
@@ -148,8 +149,6 @@ const toggleSelect = (state_, crd0) => {
   let state = {...state_};
   let sel = state.selected;
 
-  state.errmsg = '';
-
   if (state.board.findIndex(crd1 => crd1 === crd0) === -1  // no such card
       || state.solutions.length === 0)                     // game over
     return;
@@ -160,25 +159,25 @@ const toggleSelect = (state_, crd0) => {
   else
     sel.splice(kill, 1);
 
-  if (sel.length > 3)
-    state.selected = [crd0];
-
   if (sel.length === 3) {
     let result = checkTriple(sel[0], sel[1], sel[2]);
     if (result.result === 'ok') {
       tickStopwatch(state.stopwatch);
-      let set = [];
+      let s = [];
 
       for (let grab in sel) {
         let ix0 = state.board.findIndex(crd => crd === sel[grab]);
-        set.push(state.board[ix0]);
+        s.push(state.board[ix0]);
         state.board.splice(ix0, 1);
       }
-      state.setsfound.unshift({val: set, thencount: state.solutions.length});
+      state.selected = [];
+      state.setsfound.unshift({val: s, thencount: state.solutions.length});
       state = replenishBoard(state);
     } else {
       state.errmsg = result.msg;
     }
+  } else {
+    state.errmsg = 'select 3 cards';
   }
 
   return state;
