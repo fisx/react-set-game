@@ -130,6 +130,7 @@ const initState = (juniorMode, showStopwatch) => {
   let state = {
     deck: rndPermute(Array.apply(0, Array(allCards.length)).map((x, y) => y).filter(wantThisCard)),
     board: [],
+    setsfound: [],
     selected: [],
     solutions: [],
     showSolution: -1,
@@ -166,10 +167,14 @@ const toggleSelect = (state_, crd0) => {
     let result = checkTriple(sel[0], sel[1], sel[2]);
     if (result.result === 'ok') {
       tickStopwatch(state.stopwatch);
+      let set = [];
+
       for (let grab in sel) {
         let ix0 = state.board.findIndex(crd => crd === sel[grab]);
+        set.push(state.board[ix0]);
         state.board.splice(ix0, 1);
       }
+      state.setsfound.unshift(set);
       state = replenishBoard(state);
     } else {
       state.errmsg = result.msg;
@@ -287,6 +292,21 @@ const Board = ({state, setState}) => {
 };
 
 
+const SetsFound = ({sets}) => {
+  let rows = [];
+  for (let s = 0; s < 3 && s < sets.length; s++) {
+    rows.push(
+      <div key={s} className="app-row">
+        <Card key="1" svgPath="svg" card={sets[s][0]} />
+        <Card key="2" svgPath="svg" card={sets[s][1]} />
+        <Card key="3" svgPath="svg" card={sets[s][2]} />
+      </div>
+    );
+  }
+  return (<div className="app-column">last found: {rows}</div>);
+};
+
+
 const Stopwatch = (props) => {
   let { total, avg, best, worst, history } = readStopwatch(props.ticks);
 
@@ -339,7 +359,10 @@ class App extends Component {
             { this.state.showStopwatch ? <Stopwatch ticks={this.state.stopwatch} /> : '' }
           </div>
         </div>
-        <Board state={{...this.state}} setState={(s) => this.setState(s)} />
+        <div className="app-row">
+          <Board state={{...this.state}} setState={(s) => this.setState(s)} />
+          <SetsFound sets={this.state.setsfound} />
+        </div>
         <a href="https://github.com/fisx/react-set-game">learn more</a>
       </div>
     );
