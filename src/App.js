@@ -238,9 +238,9 @@ const Card = ({card, svgPath, onClick, selected, isInShowedSolution}) => {
 
   const filePath = svgPath + "/" + fileStem + ".svg"
 
-  const cls = "board-card "
-            + (selected ? "selected" : "")
-            + (isInShowedSolution ? "highlight" : "");
+  const cls = "board-card"
+            + (selected ? " selected" : "")
+            + (isInShowedSolution ? " highlight" : "");
 
   return (
     <div className={cls} onClick={onClick}>
