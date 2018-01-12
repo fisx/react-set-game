@@ -174,7 +174,7 @@ const toggleSelect = (state_, crd0) => {
         set.push(state.board[ix0]);
         state.board.splice(ix0, 1);
       }
-      state.setsfound.unshift(set);
+      state.setsfound.unshift({val: set, thencount: state.solutions.length});
       state = replenishBoard(state);
     } else {
       state.errmsg = result.msg;
@@ -297,9 +297,10 @@ const SetsFound = ({sets}) => {
   for (let s = 0; s < 3 && s < sets.length; s++) {
     rows.push(
       <div key={s} className="app-row">
-        <Card key="1" svgPath="svg" card={sets[s][0]} />
-        <Card key="2" svgPath="svg" card={sets[s][1]} />
-        <Card key="3" svgPath="svg" card={sets[s][2]} />
+        <Card key="1" svgPath="svg" card={sets[s].val[0]} />
+        <Card key="2" svgPath="svg" card={sets[s].val[1]} />
+        <Card key="3" svgPath="svg" card={sets[s].val[2]} />
+        {sets[s].thencount}
       </div>
     );
   }
