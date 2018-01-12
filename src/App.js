@@ -90,41 +90,24 @@ const allCards = [
 ];
 
 
-class Card extends Component {
-  constructor() {
-    super();
-    this.fileStem = this.fileStem.bind(this);
-    this.filePath = this.filePath.bind(this);
-  };
+const Card = ({card, svgPath, onClick, selected, isInShowedSolution}) => {
+  const fileStem =
+    allCards[card].shape + "-" +
+    allCards[card].color + "-" +
+    allCards[card].filling + "-" +
+    allCards[card].number
 
-  fileStem() {
-    return (
-      allCards[this.props.card].shape + "-" +
-      allCards[this.props.card].color + "-" +
-      allCards[this.props.card].filling + "-" +
-      allCards[this.props.card].number
-    );
-  };
+  const filePath = svgPath + "/" + fileStem + ".svg"
 
-  filePath() {
-    return (
-      this.props.svgPath + "/" + this.fileStem() + ".svg"
-    );
-  };
+  const cls = "board-card "
+            + (selected ? "selected" : "")
+            + (isInShowedSolution ? "highlight" : "");
 
-  render() {
-    const cls = "board-card "
-              + (this.props.selected ? "selected" : "")
-              + (this.props.isInShowedSolution ? "highlight" : "");
-    return (
-      <div className={cls} onClick={() => this.props.onClick(this.props.card)}>
-        <img height="180"
-             alt={this.fileStem()}
-             src={this.filePath()}
-        />
-      </div>
-    );
-  };
+  return (
+    <div className={cls} onClick={onClick}>
+      <img height="180" alt={fileStem} src={filePath} />
+    </div>
+  );
 }
 
 
@@ -335,8 +318,8 @@ const Board = ({state, setState}) => {
     let issel = crd0 =>
       state.selected.findIndex(crd1 => crd1 === crd0) !== -1;
 
-    let onclck = crd0 => {
-      setState(toggleSelect(state, crd0));
+    let onclck = () => {
+      setState(toggleSelect(state, crd));
     };
 
     let highlight = state.showSolution >= 0
