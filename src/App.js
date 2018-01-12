@@ -3,91 +3,25 @@ import moment from 'moment';
 import './App.css';
 
 
-const allCards = [
-  // (we could have constructed this in four nested loops, but it was easier
-  // to generate the rolled-out code in haskell.)
-  { shape: "Diamond", color: "Red", filling: "FillingEmpty", number: "One" },
-  { shape: "Diamond", color: "Red", filling: "FillingEmpty", number: "Two" },
-  { shape: "Diamond", color: "Red", filling: "FillingEmpty", number: "Three" },
-  { shape: "Diamond", color: "Red", filling: "Solid", number: "One" },
-  { shape: "Diamond", color: "Red", filling: "Solid", number: "Two" },
-  { shape: "Diamond", color: "Red", filling: "Solid", number: "Three" },
-  { shape: "Diamond", color: "Red", filling: "GrayedOut", number: "One" },
-  { shape: "Diamond", color: "Red", filling: "GrayedOut", number: "Two" },
-  { shape: "Diamond", color: "Red", filling: "GrayedOut", number: "Three" },
-  { shape: "Diamond", color: "Green", filling: "FillingEmpty", number: "One" },
-  { shape: "Diamond", color: "Green", filling: "FillingEmpty", number: "Two" },
-  { shape: "Diamond", color: "Green", filling: "FillingEmpty", number: "Three" },
-  { shape: "Diamond", color: "Green", filling: "Solid", number: "One" },
-  { shape: "Diamond", color: "Green", filling: "Solid", number: "Two" },
-  { shape: "Diamond", color: "Green", filling: "Solid", number: "Three" },
-  { shape: "Diamond", color: "Green", filling: "GrayedOut", number: "One" },
-  { shape: "Diamond", color: "Green", filling: "GrayedOut", number: "Two" },
-  { shape: "Diamond", color: "Green", filling: "GrayedOut", number: "Three" },
-  { shape: "Diamond", color: "Blue", filling: "FillingEmpty", number: "One" },
-  { shape: "Diamond", color: "Blue", filling: "FillingEmpty", number: "Two" },
-  { shape: "Diamond", color: "Blue", filling: "FillingEmpty", number: "Three" },
-  { shape: "Diamond", color: "Blue", filling: "Solid", number: "One" },
-  { shape: "Diamond", color: "Blue", filling: "Solid", number: "Two" },
-  { shape: "Diamond", color: "Blue", filling: "Solid", number: "Three" },
-  { shape: "Diamond", color: "Blue", filling: "GrayedOut", number: "One" },
-  { shape: "Diamond", color: "Blue", filling: "GrayedOut", number: "Two" },
-  { shape: "Diamond", color: "Blue", filling: "GrayedOut", number: "Three" },
-  { shape: "Round", color: "Red", filling: "FillingEmpty", number: "One" },
-  { shape: "Round", color: "Red", filling: "FillingEmpty", number: "Two" },
-  { shape: "Round", color: "Red", filling: "FillingEmpty", number: "Three" },
-  { shape: "Round", color: "Red", filling: "Solid", number: "One" },
-  { shape: "Round", color: "Red", filling: "Solid", number: "Two" },
-  { shape: "Round", color: "Red", filling: "Solid", number: "Three" },
-  { shape: "Round", color: "Red", filling: "GrayedOut", number: "One" },
-  { shape: "Round", color: "Red", filling: "GrayedOut", number: "Two" },
-  { shape: "Round", color: "Red", filling: "GrayedOut", number: "Three" },
-  { shape: "Round", color: "Green", filling: "FillingEmpty", number: "One" },
-  { shape: "Round", color: "Green", filling: "FillingEmpty", number: "Two" },
-  { shape: "Round", color: "Green", filling: "FillingEmpty", number: "Three" },
-  { shape: "Round", color: "Green", filling: "Solid", number: "One" },
-  { shape: "Round", color: "Green", filling: "Solid", number: "Two" },
-  { shape: "Round", color: "Green", filling: "Solid", number: "Three" },
-  { shape: "Round", color: "Green", filling: "GrayedOut", number: "One" },
-  { shape: "Round", color: "Green", filling: "GrayedOut", number: "Two" },
-  { shape: "Round", color: "Green", filling: "GrayedOut", number: "Three" },
-  { shape: "Round", color: "Blue", filling: "FillingEmpty", number: "One" },
-  { shape: "Round", color: "Blue", filling: "FillingEmpty", number: "Two" },
-  { shape: "Round", color: "Blue", filling: "FillingEmpty", number: "Three" },
-  { shape: "Round", color: "Blue", filling: "Solid", number: "One" },
-  { shape: "Round", color: "Blue", filling: "Solid", number: "Two" },
-  { shape: "Round", color: "Blue", filling: "Solid", number: "Three" },
-  { shape: "Round", color: "Blue", filling: "GrayedOut", number: "One" },
-  { shape: "Round", color: "Blue", filling: "GrayedOut", number: "Two" },
-  { shape: "Round", color: "Blue", filling: "GrayedOut", number: "Three" },
-  { shape: "Squiggle", color: "Red", filling: "FillingEmpty", number: "One" },
-  { shape: "Squiggle", color: "Red", filling: "FillingEmpty", number: "Two" },
-  { shape: "Squiggle", color: "Red", filling: "FillingEmpty", number: "Three" },
-  { shape: "Squiggle", color: "Red", filling: "Solid", number: "One" },
-  { shape: "Squiggle", color: "Red", filling: "Solid", number: "Two" },
-  { shape: "Squiggle", color: "Red", filling: "Solid", number: "Three" },
-  { shape: "Squiggle", color: "Red", filling: "GrayedOut", number: "One" },
-  { shape: "Squiggle", color: "Red", filling: "GrayedOut", number: "Two" },
-  { shape: "Squiggle", color: "Red", filling: "GrayedOut", number: "Three" },
-  { shape: "Squiggle", color: "Green", filling: "FillingEmpty", number: "One" },
-  { shape: "Squiggle", color: "Green", filling: "FillingEmpty", number: "Two" },
-  { shape: "Squiggle", color: "Green", filling: "FillingEmpty", number: "Three" },
-  { shape: "Squiggle", color: "Green", filling: "Solid", number: "One" },
-  { shape: "Squiggle", color: "Green", filling: "Solid", number: "Two" },
-  { shape: "Squiggle", color: "Green", filling: "Solid", number: "Three" },
-  { shape: "Squiggle", color: "Green", filling: "GrayedOut", number: "One" },
-  { shape: "Squiggle", color: "Green", filling: "GrayedOut", number: "Two" },
-  { shape: "Squiggle", color: "Green", filling: "GrayedOut", number: "Three" },
-  { shape: "Squiggle", color: "Blue", filling: "FillingEmpty", number: "One" },
-  { shape: "Squiggle", color: "Blue", filling: "FillingEmpty", number: "Two" },
-  { shape: "Squiggle", color: "Blue", filling: "FillingEmpty", number: "Three" },
-  { shape: "Squiggle", color: "Blue", filling: "Solid", number: "One" },
-  { shape: "Squiggle", color: "Blue", filling: "Solid", number: "Two" },
-  { shape: "Squiggle", color: "Blue", filling: "Solid", number: "Three" },
-  { shape: "Squiggle", color: "Blue", filling: "GrayedOut", number: "One" },
-  { shape: "Squiggle", color: "Blue", filling: "GrayedOut", number: "Two" },
-  { shape: "Squiggle", color: "Blue", filling: "GrayedOut", number: "Three" }
-];
+const allCards = (() => {
+  let shapes   = ["Diamond", "Round", "Squiggle"];
+  let colors   = ["Red", "Green", "Blue"];
+  let fillings = ["FillingEmpty", "Solid", "GrayedOut"];
+  let numbers  = ["One", "Two", "Three"];
+
+  let r = [];
+  for (var shape in shapes)
+    for (var color in colors)
+      for (var filling in fillings)
+        for (var number in numbers)
+          r.push({
+            shape: shapes[shape],
+            color: colors[color],
+            filling: fillings[filling],
+            number: numbers[number]
+          });
+  return r;
+})();
 
 
 const Card = ({card, svgPath, onClick, selected, isInShowedSolution}) => {
