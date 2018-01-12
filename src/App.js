@@ -24,27 +24,6 @@ const allCards = (() => {
 })();
 
 
-const Card = ({card, svgPath, onClick, selected, isInShowedSolution}) => {
-  const fileStem =
-    allCards[card].shape + "-" +
-    allCards[card].color + "-" +
-    allCards[card].filling + "-" +
-    allCards[card].number
-
-  const filePath = svgPath + "/" + fileStem + ".svg"
-
-  const cls = "board-card "
-            + (selected ? "selected" : "")
-            + (isInShowedSolution ? "highlight" : "");
-
-  return (
-    <div className={cls} onClick={onClick}>
-      <img height="180" alt={fileStem} src={filePath} />
-    </div>
-  );
-}
-
-
 const rndPermute = (v_) => {
   let v = v_.slice();
   let r = [];
@@ -243,6 +222,27 @@ const handleKeyDown = (getState, setState) => e => {
 
   setState(toggleSelect(state, state.board[ix]));
 };
+
+
+const Card = ({card, svgPath, onClick, selected, isInShowedSolution}) => {
+  const fileStem =
+    allCards[card].shape + "-" +
+    allCards[card].color + "-" +
+    allCards[card].filling + "-" +
+    allCards[card].number
+
+  const filePath = svgPath + "/" + fileStem + ".svg"
+
+  const cls = "board-card "
+            + (selected ? "selected" : "")
+            + (isInShowedSolution ? "highlight" : "");
+
+  return (
+    <div className={cls} onClick={onClick}>
+      <img height="180" alt={fileStem} src={filePath} />
+    </div>
+  );
+}
 
 
 const Board = ({state, setState}) => {
