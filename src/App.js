@@ -351,8 +351,7 @@ class App extends Component {
               { this.state.showStopwatch ? 'hide stop watch' : 'show stop watch' }
             </button>
             <div className="error">
-              { this.state.errmsg }
-              { this.state.solutions.length === 0 ? 'Game Over!' : '' }
+              { this.state.solutions.length === 0 ? 'Game Over!' : this.state.errmsg }
             </div>
           </div>
           <div className="app-column">
