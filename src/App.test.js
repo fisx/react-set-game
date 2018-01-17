@@ -21,10 +21,9 @@ Enzyme.configure({ adapter: new Adapter() });
 
 
 describe('<App />', () => {
-  it('renders 12 <Card /> components', () => {
-    pending();
-    const wrapper = shallow(<App />);
-    expect(wrapper.find(Card)).to.have.length(12);
+  it('renders at least 12 <Card /> components', () => {
+    const wrapper = mount(<App />);
+    expect(wrapper.find(Card)).to.satisfy(({length: l}) => l >= 12);
   });
 
 
@@ -61,7 +60,7 @@ describe('<App />', () => {
 
     pending();
 
-    // i think the problem is that compontents mounted into enzyme are not refreshing as we expect?
+    // i think the problem is that compontents mounted into enzyme are not refreshing as we expect?  or is it something to do with js "concurrency"?
 
     expect(cards).to.have.length(12);
     expect(cards.find('.selected')).to.have.length(1);
@@ -88,11 +87,7 @@ describe('<App />', () => {
     pending();
   });
 
-  it('does not select more than three cards', () => {
-    pending();
-  });
-
-  it('does allow to select another card if one of three selected is de-selected', () => {
+  it('selects four cards on first click', () => {
     pending();
   });
 
