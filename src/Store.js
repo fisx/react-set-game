@@ -231,12 +231,17 @@ const store = createStore(reducer);
 
 export {
   allCards,
+  readStopwatch,
+  store,
+
+  // for testing only:
   rndPermute,
   checkTriple,
   solve,
   replenishBoard,
   toggleSelect,
   tickStopwatch,
-  readStopwatch,
-  store
+  clearState,
+  initialState,
+  reducer
 };

@@ -7,7 +7,20 @@ import sinon from 'sinon';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import { readStopwatch } from './Store';
+import {
+  //  allCards,
+  readStopwatch,
+  //  store,
+  //  rndPermute,
+  //  checkTriple,
+  //  solve,
+  //  replenishBoard,
+  //  toggleSelect,
+  //  tickStopwatch,
+  //  clearState,
+  initialState,
+  reducer
+} from './Store';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -32,7 +45,10 @@ describe('pure app logic', () => {
 describe('actions', () => {
   describe('CLEAR_STATE', () => {
     it('works', () => {
-      pending();
+      let before = {...initialState};
+      let have   = reducer(before, { type: 'CLEAR_STATE' });
+      let want   = before;
+      expect(have).to.be(want);
     });
   });
 
