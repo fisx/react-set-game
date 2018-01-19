@@ -3,45 +3,20 @@ import { connect } from 'react-redux';
 import './App.css';
 import {
   allCards,
-  rndPermute,
-  replenishBoard,
-  toggleSelect,
-  tickStopwatch,
   readStopwatch,
 } from './Store.js';
 
 
-const initState = (juniorMode, showStopwatch) => {  // TODO: deprecated in favor of redux.
-  let wantThisCard = c => juniorMode ? allCards[c].filling === 'Solid' : true;
-  let state = {
-    deck: rndPermute(Array.apply(0, Array(allCards.length)).map((x, y) => y).filter(wantThisCard)),
-    board: [],
-    setsfound: [],
-    selected: [],
-    solutions: [],
-    showSolution: -1,
-    stopwatch: [],
-    juniorMode: juniorMode,
-    showStopwatch: showStopwatch,
-    errmsg: 'select 3 cards'
-  };
-
-  tickStopwatch(state.stopwatch);
-  return (replenishBoard(state));
-};
-
-
-const handleKeyDown = (getState, setState) => e => {
-  let state = getState();
-  state = {...state};
+const handleKeyDown = (state_, dispatch) => e => {
+  let state = {...state_};
 
   if (e.keyCode === 82) { // r
-    setState(initState(state.juniorMode, state.showStopwatch));
+    dispatch({ type: 'CLEAR_STATE', juniorMode: state.juniorMode, showStopwatch: state.showStopwatch });
     return;
   }
 
   if (e.keyCode === 67) { // c
-    setState({ showSolution: (state.showSolution >= state.solutions.length - 1) ? (-1) : (state.showSolution + 1) });
+    dispatch({ type: 'CYCLE_SHOW_SOLUTION' });
     return;
   }
 
@@ -71,7 +46,7 @@ const handleKeyDown = (getState, setState) => e => {
     default: return;
   }
 
-  setState(toggleSelect(state, state.board[ix]));
+  dispatch({ type: 'TOGGLE_SELECT', pos: ix });
 };
 
 
@@ -96,15 +71,15 @@ const Card = ({card, svgPath, onClick, selected, isPartOfHint}) => {
 }
 
 
-const Board = ({state, setState}) => {
-  let reveal = (ix) => {
+const Board = ({state, dispatch}) => {
+  let showCard = (ix) => {
     let crd = state.board[ix];
 
     let issel = crd0 =>
       state.selected.findIndex(crd1 => crd1 === crd0) !== -1;
 
     let onclck = () => {
-      setState(toggleSelect(state, crd));
+      dispatch({ type: 'TOGGLE_SELECT', pos: crd });
     };
 
     let highlight = state.showSolution >= 0
@@ -127,7 +102,7 @@ const Board = ({state, setState}) => {
       rows.push(<div key={i} className="board-row">{row}</div>);
       row = [];
     }
-    row.push(<div key={i}>{reveal(i)}</div>);
+    row.push(<div key={i}>{showCard(i)}</div>);
   }
   if (row.length > 0) {
     rows.push(<div key={i} className="board-row">{row}</div>);
@@ -170,13 +145,8 @@ const Stopwatch = (props) => {
 
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = initState(false, true);
-  };
-
   componentDidMount() {
-    window.onkeydown = handleKeyDown(() => this.state, s => { this.setState(s) });
+    window.onkeydown = handleKeyDown(this.state, this.state.dispatch);
   }
 
   render() {
@@ -188,13 +158,13 @@ class App extends Component {
             <p>{ this.state.solutions.length } solutions</p>
           </div>
           <div className="app-column">
-            <button onClick={() => { this.setState(initState(this.state.juniorMode, this.state.showStopwatch)); }}>
+            <button onClick={() => { this.state.dispatch({ type: 'CLEAR_STATE' })}}>
               play again
             </button>
-            <button onClick={() => { this.setState(initState(!this.state.juniorMode, this.state.showStopwatch)); }}>
+            <button onClick={() => { this.state.dispatch({ type: 'TOGGLE_JUNIOR_MODE' })}}>
               { this.state.juniorMode ? 'switch to nerd mode' : 'switch to junior mode' }
             </button>
-            <button onClick={() => { this.setState({ showStopwatch: !this.state.showStopwatch}); }}>
+            <button onClick={() => { this.state.dispatch({ type: 'TOGGLE_SHOW_STOPWATCH' }) }}>
               { this.state.showStopwatch ? 'hide stop watch' : 'show stop watch' }
             </button>
             <div className="error">
@@ -206,7 +176,7 @@ class App extends Component {
           </div>
         </div>
         <div className="app-row">
-          <Board state={{...this.state}} setState={(s) => this.setState(s)} />
+          <Board state={{...this.state}} dispatch={this.state.dispatch} />
           <SetsFound sets={this.state.setsfound} />
         </div>
         <a href="https://github.com/fisx/react-set-game">learn more</a>

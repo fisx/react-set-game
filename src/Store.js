@@ -1,7 +1,5 @@
-//import React, { Component } from 'react';
 import moment from 'moment';
 import { createStore } from 'redux';
-//import { connect } from 'react-redux';
 import './App.css';
 
 
@@ -77,6 +75,17 @@ const solve = (cards) => {
   }
 
   return solutions;
+};
+
+
+const clearState = (state_) => {
+  let newstate = {...state_};
+  let wantThisCard = c => newstate.juniorMode ? allCards[c].filling === 'Solid' : true;
+  newstate.game.deck = rndPermute(newstate.deck
+                                          .map((x, y) => y)
+                                          .filter(wantThisCard));
+  tickStopwatch(newstate.stopwatch);
+  return replenishBoard(newstate);
 };
 
 
@@ -173,7 +182,7 @@ const readStopwatch = (ticks) => {
 
 
 //////////////////////////////////////////////////////////////////////
-// store construction
+// store construction and reducer
 
 const initialState = {
   config: {
@@ -194,9 +203,33 @@ const initialState = {
   }
 };
 
-const reducer = (state = initialState, action) => state;
 
-const store = createStore(reducer);  // combineReducers({deck: ...})
+const reducer = (state = {...initialState}, action) => {
+  switch (action.type) {
+    case 'CLEAR_STATE':
+      return clearState({...initialState});
+
+    case 'TOGGLE_JUNIOR_MODE':
+      return clearState([...initialState, { config: { juniorMode: !state.config.juniorMode } } ]);
+
+    case 'TOGGLE_SHOW_STOPWATCH':
+      return [...state, { stopwatch : { showStopwatch: !state.stopwatch.showStopwatch } } ];
+
+    case 'CYCLE_SHOW_SOLUTION':
+      let newShowSolution = (state.showSolution >= state.solutions.length - 1)
+                          ? (-1)
+                          : (state.showSolution + 1);
+      return [...state, { config: { showSolution: newShowSolution } }];
+
+    case 'TOGGLE_SELECT':
+      return toggleSelect(state, state.board[action.pos]);
+
+    default:
+      return state;
+  }
+};
+
+const store = createStore(reducer);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -213,6 +246,5 @@ export {
   tickStopwatch,
   readStopwatch,
 
-  initialState,
   store
 };
