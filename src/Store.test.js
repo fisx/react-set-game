@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import { expect } from 'chai';
 import { shallow, mount, ReactWrapper } from 'enzyme';
 import sinon from 'sinon';
@@ -5,37 +7,64 @@ import sinon from 'sinon';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import * from './Store';
+import { readStopwatch } from './Store';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 
-describe('CLEAR_STATE', () => {
-  it('works', () => {
-    pending();
+describe('pure app logic', () => {
+  it('readStopwatch works', () => {
+    let ticks = [];
+    ticks.unshift(moment(new Date('2017-10-08 12:38:01')));
+    ticks.unshift(moment(new Date('2017-10-08 12:38:09')));
+    ticks.unshift(moment(new Date('2017-10-08 12:41:14')));
+
+    let result = readStopwatch(ticks);
+    expect(result.total).to.equal('3:13s');
+    expect(result.avg).to.equal('1:36s');
+    expect(result.best).to.equal('0:08s');
+    expect(result.worst).to.equal('3:05s');
+    expect(result.history).to.equal('3:05s,0:08s');
   });
 });
 
-describe('TOGGLE_JUNIOR_MODE', () => {
-  it('works', () => {
-    pending();
-  });
-});
 
-describe('TOGGLE_SHOW_STOPWATCH', () => {
-  it('works', () => {
-    pending();
+describe('actions', () => {
+  describe('CLEAR_STATE', () => {
+    it('works', () => {
+      pending();
+    });
   });
-});
 
-describe('CYCLE_SHOW_SOLUTION', () => {
-  it('works', () => {
-    pending();
+  describe('TOGGLE_JUNIOR_MODE', () => {
+    it('sets to "junior" if it was set to "nerd" before', () => {
+      pending();
+    });
+
+    it('sets to "nerd" if it was set to "junior" before', () => {
+      pending();
+    });
   });
-});
 
-describe('TOGGLE_SELECT', () => {
-  it('works', () => {
-    pending();
+  describe('TOGGLE_SHOW_STOPWATCH', () => {
+    it('sets to "false" if it was "true"', () => {
+      pending();
+    });
+
+    it('sets to "true" if it was "false"', () => {
+      pending();
+    });
+  });
+
+  describe('TOGGLE_SELECT', () => {
+    it('works', () => {
+      pending();
+    });
+  });
+
+  describe('CYCLE_SHOW_SOLUTION', () => {
+    it('works', () => {
+      pending();
+    });
   });
 });

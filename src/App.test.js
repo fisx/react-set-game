@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import moment from 'moment';
-
 import { expect } from 'chai';
 import { shallow, mount, ReactWrapper } from 'enzyme';
 import sinon from 'sinon';
@@ -10,7 +8,7 @@ import sinon from 'sinon';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import { App, Card, readStopwatch } from './App';
+import { App, Card } from './App';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -22,38 +20,40 @@ Enzyme.configure({ adapter: new Adapter() });
 
 describe('<App />', () => {
   it('renders at least 12 <Card /> components', () => {
+    pending();
     const wrapper = mount(<App />);
     expect(wrapper.find(Card)).to.satisfy(({length: l}) => l >= 12);
   });
 
 
   /*
-  it('2', () => {
-    const wrapper = shallow((
-      <div className="foo" />
-    ));
+     it('2', () => {
+     const wrapper = shallow((
+     <div className="foo" />
+     ));
 
-    expect(wrapper.find('.foo')).to.have.length(1);
-    expect(wrapper.hasClass('foo')).to.equal(true);
-  });
+     expect(wrapper.find('.foo')).to.have.length(1);
+     expect(wrapper.hasClass('foo')).to.equal(true);
+     });
 
-  it('3', () => {
-    const wrapper = shallow(<Card svgPath="svg" card={{ shape: "Squiggle", color: "Blue", filling: "GrayedOut", number: "Three" }} />);
+     it('3', () => {
+     const wrapper = shallow(<Card svgPath="svg" card={{ shape: "Squiggle", color: "Blue", filling: "GrayedOut", number: "Three" }} />);
 
-    expect(wrapper.find('.selected')).to.have.length(1);
-    expect(wrapper.hasClass('selected')).to.equal(true);
-  });
+     expect(wrapper.find('.selected')).to.have.length(1);
+     expect(wrapper.hasClass('selected')).to.equal(true);
+     });
 
-  it('4', () => {
-    const wrapper = mount(<div><Card svgPath="svg" card={{ shape: "Squiggle", color: "Blue", filling: "GrayedOut", number: "Three" }} /></div>);
+     it('4', () => {
+     const wrapper = mount(<div><Card svgPath="svg" card={{ shape: "Squiggle", color: "Blue", filling: "GrayedOut", number: "Three" }} /></div>);
 
-    expect(wrapper.find('.selected')).to.have.length(1);
-    // expect(wrapper.hasClass('selected')).to.equal(true);
-  });
-  */
+     expect(wrapper.find('.selected')).to.have.length(1);
+     // expect(wrapper.hasClass('selected')).to.equal(true);
+     });
+   */
 
 
   it('selects card on first click', () => {
+    pending();
     const wrapper = mount(<App />);
     let cards = wrapper.find(Card);
     cards.at(0).simulate('click');
@@ -91,20 +91,6 @@ describe('<App />', () => {
     pending();
   });
 
-
-  it('readStopwatch works', () => {
-    let ticks = [];
-    ticks.unshift(moment(new Date('2017-10-08 12:38:01')));
-    ticks.unshift(moment(new Date('2017-10-08 12:38:09')));
-    ticks.unshift(moment(new Date('2017-10-08 12:41:14')));
-
-    let result = readStopwatch(ticks);
-    expect(result.total).to.equal('3:13s');
-    expect(result.avg).to.equal('1:36s');
-    expect(result.best).to.equal('0:08s');
-    expect(result.worst).to.equal('3:05s');
-    expect(result.history).to.equal('3:05s,0:08s');
-  });
 
 });
 

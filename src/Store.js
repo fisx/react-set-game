@@ -209,14 +209,14 @@ const reducer = (state = {...initialState}, action) => {
     case 'TOGGLE_SHOW_STOPWATCH':
       return [...state, { showStopwatch: !state.showStopwatch }];
 
+    case 'TOGGLE_SELECT':
+      return toggleSelect(state, state.board[action.pos]);
+
     case 'CYCLE_SHOW_SOLUTION':
       let newShowSolution = (state.showSolution >= state.solutions.length - 1)
                           ? (-1)
                           : (state.showSolution + 1);
       return [...state, { showSolution: newShowSolution }];
-
-    case 'TOGGLE_SELECT':
-      return toggleSelect(state, state.board[action.pos]);
 
     default:
       return state;
