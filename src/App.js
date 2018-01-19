@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './App.css';
-import {
-  allCards,
-  readStopwatch,
-} from './Store.js';
+import { allCards, readStopwatch } from './Store';
 
 
 const handleKeyDown = (state_, dispatch) => e => {
@@ -146,7 +143,8 @@ const Stopwatch = (props) => {
 
 class App extends Component {
   componentDidMount() {
-    window.onkeydown = handleKeyDown(this.state, this.state.dispatch);
+    window.onkeydown = handleKeyDown(this.props, this.props.dispatch);
+    this.props.dispatch({ type: 'CLEAR_STATE' });
   }
 
   render() {
@@ -154,30 +152,30 @@ class App extends Component {
       <div className="App">
         <div className="app-row">
           <div className="app-column">
-            <p>{ this.state.deck.length } cards left</p>
-            <p>{ this.state.solutions.length } solutions</p>
+            <p>{ this.props.deck.length } cards left</p>
+            <p>{ this.props.solutions.length } solutions</p>
           </div>
           <div className="app-column">
-            <button onClick={() => { this.state.dispatch({ type: 'CLEAR_STATE' })}}>
+            <button onClick={() => { this.props.dispatch({ type: 'CLEAR_STATE' })}}>
               play again
             </button>
-            <button onClick={() => { this.state.dispatch({ type: 'TOGGLE_JUNIOR_MODE' })}}>
-              { this.state.juniorMode ? 'switch to nerd mode' : 'switch to junior mode' }
+            <button onClick={() => { this.props.dispatch({ type: 'TOGGLE_JUNIOR_MODE' })}}>
+              { this.props.juniorMode ? 'switch to nerd mode' : 'switch to junior mode' }
             </button>
-            <button onClick={() => { this.state.dispatch({ type: 'TOGGLE_SHOW_STOPWATCH' }) }}>
-              { this.state.showStopwatch ? 'hide stop watch' : 'show stop watch' }
+            <button onClick={() => { this.props.dispatch({ type: 'TOGGLE_SHOW_STOPWATCH' }) }}>
+              { this.props.showStopwatch ? 'hide stop watch' : 'show stop watch' }
             </button>
             <div className="error">
-              { this.state.solutions.length === 0 ? 'Game Over!' : this.state.errmsg }
+              { this.props.solutions.length === 0 ? 'Game Over!' : this.props.errmsg }
             </div>
           </div>
           <div className="app-column">
-            { this.state.showStopwatch ? <Stopwatch ticks={this.state.stopwatch} /> : '' }
+            { this.props.showStopwatch ? <Stopwatch ticks={this.props.ticks} /> : '' }
           </div>
         </div>
         <div className="app-row">
-          <Board state={{...this.state}} dispatch={this.state.dispatch} />
-          <SetsFound sets={this.state.setsfound} />
+          <Board state={{...this.props}} dispatch={this.props.dispatch} />
+          <SetsFound sets={this.props.setsfound} />
         </div>
         <a href="https://github.com/fisx/react-set-game">learn more</a>
       </div>
@@ -185,11 +183,10 @@ class App extends Component {
   }
 }
 
-const storeForApp = (state) => state;
-connect(storeForApp)(App);
+const mapStateToAppProps = (state) => state;
+const AppWithStore = connect(mapStateToAppProps)(App);
 
 export {
-  App,
-  Card,
-  readStopwatch
+  AppWithStore as App,
+  Card
 };

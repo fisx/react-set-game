@@ -78,18 +78,7 @@ const solve = (cards) => {
 };
 
 
-const clearState = (state_) => {
-  let newstate = {...state_};
-  let wantThisCard = c => newstate.juniorMode ? allCards[c].filling === 'Solid' : true;
-  newstate.game.deck = rndPermute(newstate.deck
-                                          .map((x, y) => y)
-                                          .filter(wantThisCard));
-  tickStopwatch(newstate.stopwatch);
-  return replenishBoard(newstate);
-};
-
-
-const replenishBoard = (state_) => {  // TODO: refactor.
+const replenishBoard = (state_) => {
   let state = {...state_};
   state.solutions = solve(state.board);
 
@@ -102,7 +91,7 @@ const replenishBoard = (state_) => {  // TODO: refactor.
 };
 
 
-const toggleSelect = (state_, crd0) => {  // TODO: refactor?
+const toggleSelect = (state_, crd0) => {
   let state = {...state_};
   let sel = state.selected;
 
@@ -119,7 +108,7 @@ const toggleSelect = (state_, crd0) => {  // TODO: refactor?
   if (sel.length === 3) {
     let result = checkTriple(sel[0], sel[1], sel[2]);
     if (result.result === 'ok') {
-      tickStopwatch(state.stopwatch);
+      tickStopwatch(state.ticks);
       let s = [];
 
       for (let grab in sel) {
@@ -185,22 +174,27 @@ const readStopwatch = (ticks) => {
 // store construction and reducer
 
 const initialState = {
-  config: {
-    juniorMode: false,
-    showSolution: -1
-  },
-  stopwatch: {
-    timestamps: [],
-    showStopwatch: true
-  },
-  game: {
-    deck: Array.apply(0, Array(allCards.length)),
-    setsfound: [],
-    board: [],
-    selected: [],
-    errmsg: 'select 3 cards',
-    solutions: []
-  }
+  juniorMode: false,
+  showSolution: -1,
+  ticks: [],
+  showStopwatch: true,
+  deck: Array.apply(0, Array(allCards.length)),
+  setsfound: [],
+  board: [],
+  selected: [],
+  errmsg: 'select 3 cards',
+  solutions: []
+};
+
+
+const clearState = (state_) => {
+  let newstate = {...state_};
+  let wantThisCard = c => newstate.juniorMode ? allCards[c].filling === 'Solid' : true;
+  newstate.deck = rndPermute(newstate.deck
+                                          .map((x, y) => y)
+                                          .filter(wantThisCard));
+  tickStopwatch(newstate.ticks);
+  return replenishBoard(newstate);
 };
 
 
@@ -210,16 +204,16 @@ const reducer = (state = {...initialState}, action) => {
       return clearState({...initialState});
 
     case 'TOGGLE_JUNIOR_MODE':
-      return clearState([...initialState, { config: { juniorMode: !state.config.juniorMode } } ]);
+      return clearState([...initialState, { juniorMode: !state.juniorMode } ]);
 
     case 'TOGGLE_SHOW_STOPWATCH':
-      return [...state, { stopwatch : { showStopwatch: !state.stopwatch.showStopwatch } } ];
+      return [...state, { showStopwatch: !state.showStopwatch }];
 
     case 'CYCLE_SHOW_SOLUTION':
       let newShowSolution = (state.showSolution >= state.solutions.length - 1)
                           ? (-1)
                           : (state.showSolution + 1);
-      return [...state, { config: { showSolution: newShowSolution } }];
+      return [...state, { showSolution: newShowSolution }];
 
     case 'TOGGLE_SELECT':
       return toggleSelect(state, state.board[action.pos]);
@@ -242,9 +236,7 @@ export {
   solve,
   replenishBoard,
   toggleSelect,
-
   tickStopwatch,
   readStopwatch,
-
   store
 };
