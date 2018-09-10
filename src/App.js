@@ -77,6 +77,7 @@ const solve = (cards) => {
 
 const replenishBoard = (state_) => {
   let state = {...state_};
+  state.showSolution = -1;
   state.solutions = solve(state.board);
 
   while ((state.board.length < 12 || state.solutions.length === 0) && state.deck.length > 0) {
