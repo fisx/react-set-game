@@ -33,7 +33,7 @@ a {
 }
 
 .highlight {
-  background-color: yellow;
+  border: 5px dotted yellow;
 }
 
 .error {
