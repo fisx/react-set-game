@@ -41,6 +41,9 @@ const rndPermute = (v_) => {
 
 
 const checkTriple = (a, b, c) => {
+  if (a === -1 || b === -1 || c === -1)
+    return { result: 'error', msg: 'not a set: contains holes.' };
+
   let alleq = k => (
     allCards[a][k] === allCards[b][k] &&
     allCards[b][k] === allCards[c][k]
@@ -78,8 +81,16 @@ const solve = (cards) => {
 const replenishBoard = (state_) => {
   let state = {...state_};
   state.showSolution = -1;
+
+  // find empty positions between 0,11.  take first cards from higher positions, then from deck, to refill.
+  for (let i = 0; i < 12; i++) {
+    if (state.board[i] === -1)
+      state.board[i] = (state.board.length > 12) ? state.board.pop() : state.deck.pop();
+  }
+
   state.solutions = solve(state.board);
 
+  // take more cards from deck until board is full and there is a solution.
   while ((state.board.length < 12 || state.solutions.length === 0) && state.deck.length > 0) {
     state.board.push(state.deck.pop());
     state.solutions = solve(state.board);
@@ -130,7 +141,7 @@ const initState = (juniorMode, showStopwatch) => {
   let wantThisCard = c => juniorMode ? allCards[c].filling === 'Solid' : true;
   let state = {
     deck: rndPermute(Array.apply(0, Array(allCards.length)).map((x, y) => y).filter(wantThisCard)),
-    board: [],
+    board: Array.apply(0, Array(12)).map((x, y) => -1),
     setsfound: [],
     selected: [],
     solutions: [],
@@ -169,7 +180,7 @@ const toggleSelect = (state_, crd0) => {
       for (let grab in sel) {
         let ix0 = state.board.findIndex(crd => crd === sel[grab]);
         s.push(state.board[ix0]);
-        state.board.splice(ix0, 1);
+        state.board[ix0] = -1;
       }
       state.selected = [];
       state.setsfound.unshift({val: s, thencount: state.solutions.length});
@@ -230,23 +241,29 @@ const handleKeyDown = (getState, setState) => e => {
 
 
 const Card = ({card, svgPath, onClick, selected, isInShowedSolution}) => {
-  const fileStem =
-    allCards[card].shape + "-" +
-    allCards[card].color + "-" +
-    allCards[card].filling + "-" +
-    allCards[card].number
-
-  const filePath = svgPath + "/" + fileStem + ".svg"
-
   const cls = "board-card"
             + (selected ? " selected" : "")
             + (isInShowedSolution ? " highlight" : "");
 
-  return (
-    <div className={cls} onClick={onClick}>
-      <img height="180" alt={fileStem} src={filePath} />
-    </div>
-  );
+  if (card === -1) {
+    return (
+      <div className={cls} />
+    );
+  } else {
+    const fileStem =
+      allCards[card].shape + "-" +
+      allCards[card].color + "-" +
+      allCards[card].filling + "-" +
+      allCards[card].number
+
+    const filePath = svgPath + "/" + fileStem + ".svg"
+
+    return (
+      <div className={cls} onClick={onClick}>
+        <img height="180" alt={fileStem} src={filePath} />
+      </div>
+    );
+  }
 }
 
 
