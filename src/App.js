@@ -253,7 +253,9 @@ const Card = ({card, svgPath, onClick, selected, isInShowedSolution}) => {
 
   if (card === -1) {
     return (
-      <div className={cls} />
+      <div className={cls}>
+        <img height="180" alt="" src="empty.svg" />
+      </div>
     );
   } else {
     const fileStem =
