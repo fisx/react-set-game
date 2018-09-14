@@ -82,16 +82,22 @@ const replenishBoard = (state_) => {
   let state = {...state_};
   state.showSolution = -1;
 
-  // find empty positions between 0,11.  take first cards from higher positions, then from deck, to refill.
+  while (state.board.length < 12) {
+    state.unshift(-1);
+  }
+
+  while (state.board.length > 12 && state.board[state.board.length - 1] === -1) {
+    state.board.pop();
+  }
+
   for (let i = 0; i < 12; i++) {
-    if (state.board[i] === -1)
-      state.board[i] = state.board.length > 12 ? state.board.pop() : (state.deck.length > 0 ? state.deck.pop() : -1);
+    if (state.board[i] === -1 && state.deck.length > 0)
+      state.board[i] = state.deck.pop();
   }
 
   state.solutions = solve(state.board);
 
-  // take more cards from deck until board is full and there is a solution.
-  while ((state.board.length < 12 || state.solutions.length === 0) && state.deck.length > 0) {
+  while (state.solutions.length === 0 && state.deck.length > 0) {
     state.board.push(state.deck.pop());
     state.solutions = solve(state.board);
   }
