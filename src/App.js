@@ -65,14 +65,11 @@ const checkTriple = (a, b, c) => {
 const solve = (cards) => {
   let solutions = [];
 
-  for (let a = 0; a < cards.length; a++) {
-    for (let b = a + 1; b < cards.length; b++) {
-      for (let c = b + 1; c < cards.length; c++) {
+  for (let a = 0; a < cards.length; a++)
+    for (let b = a + 1; b < cards.length; b++)
+      for (let c = b + 1; c < cards.length; c++)
         if (checkTriple(cards[a], cards[b], cards[c]).result === 'ok')
           solutions.push([a, b, c]);
-      }
-    }
-  }
 
   return solutions;
 };
@@ -167,16 +164,18 @@ const toggleSelect = (state_, crd0) => {
   let state = {...state_};
   let sel = state.selected;
 
-  if (state.board.findIndex(crd1 => crd1 === crd0) === -1  // no such card
+  if (state.board.findIndex(crd1 => crd1 === crd0) === -1  // no such card (internal error: wrong call to toggleSelect)
       || state.solutions.length === 0)                     // game over
     return;
 
-  let kill = sel.findIndex(crd1 => crd1 === crd0);
-  if (kill === -1)
+  // if card is not in sel, add it; otherwise, remove it.
+  let pos_in_sel = sel.findIndex(crd1 => crd1 === crd0);
+  if (pos_in_sel === -1)
     sel.push(crd0)
   else
-    sel.splice(kill, 1);
+    sel.splice(pos_in_sel, 1);
 
+  // remove a selected set if applicable.
   if (sel.length === 3) {
     let result = checkTriple(sel[0], sel[1], sel[2]);
     if (result.result === 'ok') {
