@@ -169,11 +169,13 @@ const toggleSelect = (state_, crd0) => {
     return;
 
   // if card is not in sel, add it; otherwise, remove it.
-  let pos_in_sel = sel.findIndex(crd1 => crd1 === crd0);
-  if (pos_in_sel === -1)
-    sel.push(crd0)
-  else
-    sel.splice(pos_in_sel, 1);
+  if (crd0 !== -1) {
+    let pos_in_sel = sel.findIndex(crd1 => crd1 === crd0);
+    if (pos_in_sel === -1)
+      sel.push(crd0)
+    else
+      sel.splice(pos_in_sel, 1);
+  }
 
   // remove a selected set if applicable.
   if (sel.length === 3) {
