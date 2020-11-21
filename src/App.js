@@ -75,8 +75,20 @@ const solve = (cards) => {
 };
 
 
+const shakeBoard = (oldBoard) => {
+  let newBoard = Array();
+  for (let i = 0; i < oldBoard.length; i++) {
+    if (oldBoard[i] !== -1) {
+      newBoard.push(oldBoard[i])
+    }
+  }
+  return newBoard;
+}
+
+
 const replenishBoard = (state_) => {
   let state = {...state_};
+  state.board = shakeBoard(state_.board);
   state.showSolution = -1;
 
   while (state.board.length < 12) {
