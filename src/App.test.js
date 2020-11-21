@@ -10,7 +10,7 @@ import sinon from 'sinon';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import { App, Card, readStopwatch } from './App';
+import { App, Card, readStopwatch, replenishBoardCards } from './App';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -106,6 +106,98 @@ describe('<App />', () => {
     expect(result.history).to.equal('3:05s,0:08s');
   });
 
+  describe('replenishBoardCards', () => {
+    it('works', () => {
+      let board = Array();
+      board.push(-1);
+      board.push(2);
+      board.push(3);
+      let deck = Array();
+      replenishBoardCards(2, board, deck);
+      let want = Array();
+      want.push(3);
+      want.push(2);
+
+      expect(board.length).to.equal(want.length);
+      for (let i = 0; i < board.length; i++) {
+        expect(board[i]).to.equal(want[i]);
+      }
+    });
+    it('works', () => {
+      let board = Array();
+      board.push(-1);
+      board.push(2);
+      board.push(-1);
+      board.push(3);
+      let deck = Array();
+      replenishBoardCards(2, board, deck);
+      let want = Array();
+      want.push(3);
+      want.push(2);
+
+      expect(board.length).to.equal(want.length);
+      for (let i = 0; i < board.length; i++) {
+        expect(board[i]).to.equal(want[i]);
+      }
+    });
+    it('works', () => {
+      let board = Array();
+      board.push(-1);
+      board.push(2);
+      board.push(-1);
+      board.push(3);
+      let deck = Array();
+      deck.push(4);
+      replenishBoardCards(2, board, deck);
+      let want = Array();
+      want.push(3);
+      want.push(2);
+
+      expect(board.length).to.equal(want.length);
+      for (let i = 0; i < board.length; i++) {
+        expect(board[i]).to.equal(want[i]);
+      }
+    });
+    it('works', () => {
+      let board = Array();
+      board.push(-1);
+      board.push(2);
+      board.push(-1);
+      board.push(3);
+      let deck = Array();
+      deck.push(4);
+      replenishBoardCards(3, board, deck);
+      let want = Array();
+      want.push(3);
+      want.push(2);
+      want.push(4);
+
+      expect(board.length).to.equal(want.length);
+      for (let i = 0; i < board.length; i++) {
+        expect(board[i]).to.equal(want[i]);
+      }
+    });
+    it('works', () => {
+      let board = Array();
+      board.push(-1);
+      board.push(2);
+      board.push(-1);
+      board.push(3);
+      board.push(-1);
+      let deck = Array();
+      deck.push(4);
+      replenishBoardCards(3, board, deck);
+      let want = Array();
+      want.push(3);
+      want.push(2);
+      want.push(4);
+
+      expect(board.length).to.equal(want.length);
+      for (let i = 0; i < board.length; i++) {
+        expect(board[i]).to.equal(want[i]);
+      }
+    });
+  });
 });
 
 

@@ -75,35 +75,39 @@ const solve = (cards) => {
 };
 
 
-const shakeBoard = (oldBoard) => {
-  let newBoard = Array();
-  for (let i = 0; i < oldBoard.length; i++) {
-    if (oldBoard[i] !== -1) {
-      newBoard.push(oldBoard[i])
+const replenishBoardCards = (targetSize, board, deck) => {
+  while (board.length < targetSize) {
+    board.unshift(-1);
+  }
+
+  while (board.length > targetSize && board[board.length - 1] === -1) {
+    board.pop();
+  }
+
+  for (let i = 0; i < board.length; i++) {
+    if (board[i] === -1) {
+      if (board.length > targetSize &&
+          i < board.length - 1 &&
+          board[board.length - 1] !== -1) {
+        board[i] = board.pop();
+      }
+      else if (i < targetSize && deck.length > 0) {
+        board[i] = deck.pop();
+      }
     }
   }
-  return newBoard;
+
+  while (board.length > targetSize && board[board.length - 1] === -1) {
+    board.pop();
+  }
 }
 
 
 const replenishBoard = (state_) => {
   let state = {...state_};
-  state.board = shakeBoard(state_.board);
+
   state.showSolution = -1;
-
-  while (state.board.length < 12) {
-    state.board.unshift(-1);
-  }
-
-  while (state.board.length > 12 && state.board[state.board.length - 1] === -1) {
-    state.board.pop();
-  }
-
-  for (let i = 0; i < 12; i++) {
-    if (state.board[i] === -1 && state.deck.length > 0)
-      state.board[i] = state.deck.pop();
-  }
-
+  replenishBoardCards(12, state.board, state.deck);
   state.solutions = solve(state.board);
 
   while (state.solutions.length === 0 && state.deck.length > 0) {
@@ -407,4 +411,4 @@ class App extends Component {
   }
 }
 
-export { App, Card, readStopwatch };
+export { App, Card, readStopwatch, replenishBoardCards };
