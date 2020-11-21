@@ -80,7 +80,7 @@ const replenishBoard = (state_) => {
   state.showSolution = -1;
 
   while (state.board.length < 12) {
-    state.unshift(-1);
+    state.board.unshift(-1);
   }
 
   while (state.board.length > 12 && state.board[state.board.length - 1] === -1) {
