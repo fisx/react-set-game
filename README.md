@@ -1,3 +1,10 @@
+
+
+
+this is archived, check out github.com/fisx/set-game for an elm implementation.
+
+
+
 # Set Game
 
 [Play!](https://fisx.github.io/react-set-game/)
